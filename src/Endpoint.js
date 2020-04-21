@@ -62,6 +62,22 @@ export default class Endpoint extends EventEmitter {
     }
 
     /**
+     * End PjSip service from foreground state, allowing it to be killed from main thread rather than GC in background.
+     * @returns {Promise}
+     */
+    stop() {
+        return new Promise(function(resolve, reject) {
+            NativeModules.PjSipModule.stop((successful, data) => {
+                if (successful) {
+                    resolve(data);
+                } else {
+                    reject(data);
+                }
+            });
+        });
+    }
+
+    /**
      * Returns a Promise that will be resolved once PjSip module is initialized.
      * Do not call any function while library is not initialized.
      *
