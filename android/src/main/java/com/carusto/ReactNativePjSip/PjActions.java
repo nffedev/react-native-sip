@@ -22,6 +22,8 @@ public class PjActions {
     public static final String TAG = "PjActions";
 
     public static final String ACTION_START = "start";
+    public static final String ACTION_STOP = "stop";
+
     public static final String ACTION_CREATE_ACCOUNT = "account_create";
     public static final String ACTION_CHANGE_CODEC_SETTINGS= "change_codec_settings'";
     public static final String ACTION_REGISTER_ACCOUNT = "account_register";
@@ -52,6 +54,14 @@ public class PjActions {
     public static final String EVENT_CALL_SCREEN_LOCKED = "com.carusto.call.screen.locked";
     public static final String EVENT_MESSAGE_RECEIVED = "com.carusto.message.received";
     public static final String EVENT_HANDLED = "com.carusto.handled";
+
+    public static Intent createStopIntent(int callbackId, Context context) {
+        Intent intent = new Intent(context, PjSipService.class);
+        intent.setAction(PjActions.ACTION_STOP);
+        intent.putExtra("callback_id", callbackId);
+
+        return intent;
+    }
 
     public static Intent createStartIntent(int callbackId, ReadableMap configuration, Context context) {
         Intent intent = new Intent(context, PjSipService.class);
