@@ -270,7 +270,8 @@ public class PjSipService extends Service {
         unregisterReceiver(mPhoneStateChangedReceiver);
 
         super.onDestroy();
-    }
+
+        }
 
     private void job(Runnable job) {
         mHandler.post(job);
@@ -334,7 +335,9 @@ public class PjSipService extends Service {
             case PjActions.ACTION_START:
                 handleStart(intent);
                 break;
-
+            case PjActions.ACTION_STOP:
+                handleStop(intent);
+                break;
             // Account actions
             case PjActions.ACTION_CREATE_ACCOUNT:
                 handleAccountCreate(intent);
@@ -440,7 +443,13 @@ public class PjSipService extends Service {
             mEmitter.fireIntentHandled(intent, e);
         }
     }
-
+    private void handleStop(Intent intent) {
+        try {
+            mEmitter.fireIntentHandled(intent);
+        } catch (Exception e) {
+            mEmitter.fireIntentHandled(intent, e);
+        }
+    }
     private void updateServiceConfiguration(ServiceConfigurationDTO configuration) {
         mServiceConfiguration = configuration;
     }
