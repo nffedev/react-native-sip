@@ -1100,7 +1100,7 @@ public class PjSipService extends Service {
         public void onReceive(Context context, Intent intent) {
             final String extraState = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
 
-            if (TelephonyManager.EXTRA_STATE_RINGING.equals(extraState) || TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState)) {
+            if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState)) {
                 Log.d(TAG, "GSM call received, pause all SIP calls and do not accept incoming SIP calls.");
 
                 mGSMIdle = false;
