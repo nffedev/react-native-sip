@@ -1,7 +1,13 @@
 package com.carusto.ReactNativePjSip;
 
+import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,6 +23,8 @@ import android.os.Process;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
 
 import com.carusto.ReactNativePjSip.dto.AccountConfigurationDTO;
 import com.carusto.ReactNativePjSip.dto.CallSettingsDTO;
@@ -57,6 +65,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PjSipService extends Service {
+    public static final String CHANNEL_ID = "myHUD_Service";
 
     private static String TAG = "PjSipService";
 
@@ -250,7 +259,42 @@ public class PjSipService extends Service {
             });
         }
 
+        createNotificationChannel();
+        ComponentName cn;
+        ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            cn = am.getAppTasks().get(0).getTaskInfo().topActivity;
+        } else {
+            //noinspection deprecation
+            cn = am.getRunningTasks(1).get(0).topActivity;
+        }
+
+        Intent notificationIntent = new Intent();
+        notificationIntent.setComponent(cn);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                0, notificationIntent, 0);
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("myHUD Service")
+                .setContentText("Active")
+                .setSmallIcon(R.drawable.ic_status_notification)
+                .setContentIntent(pendingIntent)
+                .build();
+        startForeground(411, notification);
+
         return START_NOT_STICKY;
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "myHUD Service Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            serviceChannel.setSound(null, null);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
     }
 
     @Override
