@@ -2,7 +2,7 @@
 set -e
 
 VERSION="v2.9.0"
-URL="https://github.com/nffedev/react-native-pjsip-builder/archive/v2.9.0.tar.gz"
+URL="https://github.com/nffedev/react-native-pjsip-builder/archive/refs/tags/v2.9.0.tar.gz"
 LOCK=".libs.lock"
 DEST=".libs.tar.gz"
 DOWNLOAD=true
